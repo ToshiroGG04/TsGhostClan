@@ -1,0 +1,689 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#030000">
+<title>TOSHIRO CPM SECURITY</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--red:#ff0018}
+
+body{
+ background:#020000;
+ color:white;
+ font-family:Consolas,monospace;
+ min-height:100vh;
+ overflow-x:hidden
+}
+
+#matrix{
+ position:fixed;
+ inset:0;
+ width:100%;
+ height:100%;
+ z-index:0
+}
+
+.top{
+ position:fixed;
+ top:0;
+ left:0;
+ width:100%;
+ height:36px;
+ background:#080000;
+ border-bottom:1px solid red;
+ display:flex;
+ align-items:center;
+ overflow:hidden;
+ white-space:nowrap;
+ z-index:5
+}
+
+.top span{
+ color:red;
+ font-size:12px;
+ text-shadow:0 0 12px red;
+ animation:scroll 17s linear infinite
+}
+
+@keyframes scroll{
+ from{transform:translateX(100%)}
+ to{transform:translateX(-100%)}
+}
+
+.container{
+ position:relative;
+ z-index:2;
+ min-height:100vh;
+ padding:65px 16px 35px;
+ display:flex;
+ flex-direction:column;
+ align-items:center;
+ justify-content:center;
+ text-align:center
+}
+
+/* RED HACKER AVATAR */
+.demon{
+ width:190px;
+ height:190px;
+ margin-bottom:17px;
+ animation:float 3s ease-in-out infinite;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+}
+
+.hacker-image{
+ width:190px;
+ height:190px;
+ object-fit:contain;
+ border-radius:50%;
+ filter:drop-shadow(0 0 12px red) drop-shadow(0 0 25px #ff0018);
+ animation:hackerPulse 2s infinite alternate;
+}
+
+@keyframes hackerPulse{
+ from{
+  filter:drop-shadow(0 0 10px red);
+  transform:scale(1);
+ }
+ to{
+  filter:drop-shadow(0 0 28px red);
+  transform:scale(1.04);
+ }
+}
+
+@keyframes float{
+ 0%,100%{transform:translateY(0) rotate(-1deg)}
+ 50%{transform:translateY(-9px) rotate(1deg)}
+}
+
+h1{
+ font-size:clamp(40px,10vw,76px);
+ color:#ff1010;
+ font-weight:1000;
+ letter-spacing:2px;
+ text-shadow:0 0 10px red,0 0 30px red,0 0 65px red;
+ animation:glow 1.4s infinite alternate
+}
+
+@keyframes glow{
+ to{text-shadow:0 0 20px red,0 0 50px red,0 0 90px red}
+}
+
+.subtitle{
+ margin-top:12px;
+ font-size:10px;
+ color:#ff3333;
+ letter-spacing:6px
+}
+
+/* PANELS */
+.panel,.info,.terminal{
+ width:100%;
+ max-width:570px;
+ margin-top:27px;
+ padding:22px 17px;
+ background:rgba(8,0,0,.96);
+ border:1px solid red;
+ box-shadow:0 0 15px #b00000,inset 0 0 15px #300000;
+ position:relative;
+ overflow:hidden;
+ text-align:left
+}
+
+.panel:before,.info:before,.terminal:before{
+ content:"";
+ position:absolute;
+ top:0;
+ left:-100%;
+ width:55%;
+ height:2px;
+ background:white;
+ box-shadow:0 0 15px red,0 0 30px red;
+ animation:running 2s linear infinite
+}
+
+@keyframes running{
+ to{left:150%}
+}
+
+.panel{text-align:center}
+
+h2,h3{
+ color:red;
+ text-shadow:0 0 12px red;
+ margin-bottom:15px
+}
+
+.panel p{
+ font-size:13px;
+ line-height:2;
+ color:#eee
+}
+
+.status{
+ margin-top:23px;
+ color:red;
+ font-size:12px;
+ text-shadow:0 0 12px red;
+ animation:blink 1s infinite
+}
+
+@keyframes blink{
+ 50%{opacity:.35}
+}
+
+.info h3{font-size:14px}
+
+.info p{
+ font-size:12px;
+ color:#ddd;
+ line-height:2.2;
+ overflow-wrap:anywhere
+}
+
+.info hr{
+ border:0;
+ border-top:1px solid #500000;
+ margin:15px 0
+}
+
+.row{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ gap:10px
+}
+
+.value{
+ color:#ff5555;
+ text-align:right
+}
+
+.lock{
+ display:inline-flex;
+ align-items:center;
+ gap:6px;
+ color:#999;
+ font-size:10px;
+ border:1px solid #650000;
+ padding:6px 9px;
+ background:#130000;
+ border-radius:4px
+}
+
+.private{
+ color:#ff3333;
+ font-size:12px;
+ text-shadow:0 0 8px red
+}
+
+.terminal{
+ color:#ff3333;
+ font-size:11px;
+ line-height:2
+}
+
+.footer{
+ margin-top:25px;
+ color:#777;
+ font-size:9px;
+ letter-spacing:3px
+}
+
+/* SECURITY ALERT */
+#securityAlert{
+ position:fixed;
+ inset:0;
+ z-index:9999;
+ background:rgba(0,0,0,.94);
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ padding:20px;
+ animation:alertFade .5s ease;
+}
+
+.alertBox{
+ width:100%;
+ max-width:420px;
+ background:#100000;
+ border:1px solid red;
+ padding:27px 20px;
+ text-align:center;
+ box-shadow:0 0 25px red,0 0 65px #700000;
+}
+
+.alertIcon{
+ font-size:48px;
+ color:red;
+ text-shadow:0 0 20px red;
+ animation:alertPulse .8s infinite alternate;
+}
+
+.alertBox h2{
+ color:red;
+ margin:17px 0;
+ text-shadow:0 0 15px red;
+}
+
+.alertBox p{
+ color:#ddd;
+ font-size:12px;
+ line-height:2;
+}
+
+.alertButton{
+ width:100%;
+ margin-top:20px;
+ padding:14px;
+ background:#a00000;
+ color:white;
+ border:1px solid red;
+ font-weight:bold;
+ font-family:monospace;
+ cursor:pointer;
+}
+
+@keyframes alertPulse{
+ to{transform:scale(1.15);opacity:.5}
+}
+
+@keyframes alertFade{
+ from{opacity:0}
+ to{opacity:1}
+}
+
+/* ENDLESS HACKER CODE TERMINAL */
+.code-screen{
+ width:100%;
+ max-width:570px;
+ margin-top:25px;
+ padding:15px;
+ background:rgba(0,0,0,.96);
+ border:1px solid #a00000;
+ box-shadow:0 0 20px #700000;
+ text-align:left;
+ overflow:hidden;
+}
+
+.code-header{
+ display:flex;
+ justify-content:space-between;
+ border-bottom:1px solid #500000;
+ padding-bottom:12px;
+ margin-bottom:12px;
+ color:#ff3333;
+ font-size:11px;
+}
+
+.live{
+ color:#ff0018;
+ animation:blink 1s infinite;
+}
+
+.code-stream{
+ height:220px;
+ overflow:hidden;
+ color:#ff3333;
+ font-size:10px;
+ line-height:1.8;
+ overflow-wrap:anywhere;
+}
+
+.code-line{
+ white-space:pre-wrap;
+ animation:codeAppear .15s ease;
+}
+
+.code-line:nth-child(3n){
+ color:#aaa;
+}
+
+.code-line:nth-child(3n + 1){
+ color:#ff3333;
+}
+
+.code-line:nth-child(3n + 2){
+ color:#a00000;
+}
+
+@keyframes codeAppear{
+ from{opacity:0;transform:translateX(-5px)}
+ to{opacity:1;transform:translateX(0)}
+}
+
+.code-cursor{
+ color:#ff3333;
+ font-size:10px;
+ margin-top:10px;
+ border-top:1px solid #400000;
+ padding-top:10px;
+}
+
+.code-cursor span{
+ animation:blink .5s infinite;
+}
+</style>
+</head>
+
+<body>
+
+<!-- SECURITY ALERT -->
+<div id="securityAlert">
+ <div class="alertBox">
+  <div class="alertIcon">⚠</div>
+  <h2>SECURITY ALERT</h2>
+  <p>
+   TOSHIRO CPM SECURITY INTERFACE<br>
+   DEVICE CONNECTION DETECTED
+   <br><br>
+   DEVICE: <span id="alertDevice">DETECTING</span><br>
+   BROWSER: <span id="alertBrowser">DETECTING</span>
+   <br><br>
+   VISUAL SECURITY SCAN INITIALIZED
+   <br><br>
+   <span style="color:#ff3333">
+   PRIVATE DEVICE ACCESS: NOT GRANTED
+   </span>
+  </p>
+  <button class="alertButton"
+   onclick="document.getElementById('securityAlert').remove()">
+   ACKNOWLEDGE
+  </button>
+ </div>
+</div>
+
+<script>
+const ua=navigator.userAgent;
+let d="Unknown";
+let b="Unknown";
+
+if(/iPhone|iPad/i.test(ua)) d="APPLE DEVICE";
+else if(/Android/i.test(ua)) d="ANDROID DEVICE";
+else if(/Windows/i.test(ua)) d="WINDOWS PC";
+else if(/Macintosh/i.test(ua)) d="MAC DEVICE";
+
+if(/Edg/i.test(ua)) b="EDGE";
+else if(/Chrome/i.test(ua)) b="CHROME";
+else if(/Firefox/i.test(ua)) b="FIREFOX";
+else if(/Safari/i.test(ua)) b="SAFARI";
+
+document.getElementById("alertDevice").textContent=d;
+document.getElementById("alertBrowser").textContent=b;
+</script>
+
+<canvas id="matrix"></canvas>
+
+<div class="top">
+<span>
+010101 // TOSHIRO CPM // TS GHOST CLAN //
+DEMON SECURITY // LUA FILE PROTECTION //
+RED PROTOCOL ACTIVE // SYSTEM ONLINE // 010101
+</span>
+</div>
+
+<div class="container">
+
+<!-- TOSHIRO RED HACKER PROFILE -->
+<div class="demon hacker">
+ <img
+  src="https://img.stablecog.com/insecure/1920w/aHR0cHM6Ly9iLnN0YWJsZWNvZy5jb20vOTMyOThkNWUtMmJlYy00MWM1LWJjNDQtYjY1NmUwZWU1M2JhLmpwZWc.webp"
+  alt="TOSHIRO Red Hacker Logo"
+  class="hacker-image"
+ >
+</div>
+
+<h1>TOSHIRO CPM</h1>
+<div class="subtitle">TS GHOST CLAN SECURITY</div>
+
+<div class="panel">
+<h2>⚠ SECURITY WARNING ⚠</h2>
+<p>
+DO NOT ATTEMPT TO DECRYPT MY LUA FILES.
+<br><br>
+ALL FILES ARE PROTECTED BY TOSHIRO CPM.
+<br><br>
+UNAUTHORIZED ACCESS IS NOT WELCOME.
+</p>
+</div>
+
+<div class="status">
+● RED SECURITY INTERFACE ACTIVE
+</div>
+
+<!-- DEVICE INFORMATION -->
+<div class="info">
+<h3>◈ DEVICE INFORMATION</h3>
+
+<div class="row">
+<p>Device type</p>
+<p class="value" id="device">Detecting...</p>
+</div>
+
+<div class="row">
+<p>Operating system</p>
+<p class="value" id="os">Detecting...</p>
+</div>
+
+<div class="row">
+<p>Browser</p>
+<p class="value" id="browser">Detecting...</p>
+</div>
+
+<div class="row">
+<p>Screen resolution</p>
+<p class="value" id="screen">Detecting...</p>
+</div>
+
+<hr>
+
+<h3>◈ LOCATION INFORMATION</h3>
+
+<div class="row">
+<p>Location status</p>
+<span class="lock">🔒 PRIVATE</span>
+</div>
+
+<br>
+<p class="private">🔒 LOCATION HIDDEN</p>
+<p>City: <span class="value">Private</span></p>
+<p>County: <span class="value">Private</span></p>
+<p>Region: <span class="value">Private</span></p>
+<p>Country: <span class="value">Private</span></p>
+
+<p style="font-size:10px;color:#888;margin-top:12px">
+Location information is not collected.
+Visitor privacy is protected.
+</p>
+</div>
+
+<!-- TERMINAL -->
+<div class="terminal" id="terminal">
+[SYSTEM] TOSHIRO CPM INITIALIZED<br>
+[SECURITY] HACKER INTERFACE ONLINE<br>
+[PROTECTION] LUA GUARD ACTIVE<br>
+[STATUS] SYSTEM SECURE
+</div>
+
+<div class="footer">
+TOSHIRO CPM © 2026
+</div>
+
+<!-- ENDLESS HACKER CODE -->
+<div class="code-screen">
+ <div class="code-header">
+  <span>● LIVE CODE STREAM</span>
+  <span class="live">● RUNNING</span>
+ </div>
+
+ <div id="codeStream" class="code-stream"></div>
+
+ <div class="code-cursor">
+ SYSTEM PROCESS RUNNING<span>_</span>
+ </div>
+</div>
+
+</div>
+
+<script>
+// RED MATRIX BACKGROUND
+const canvas=document.getElementById("matrix");
+const ctx=canvas.getContext("2d");
+const size=16;
+let drops=[];
+
+function resize(){
+ canvas.width=innerWidth;
+ canvas.height=innerHeight;
+ drops=Array(Math.floor(canvas.width/size))
+ .fill(0).map(()=>Math.random()*-40);
+}
+
+resize();
+window.addEventListener("resize",resize);
+
+const chars="01ABCDEFGHIJKLMNOPQRSTUVWXYZ{}[]<>#$%";
+
+function draw(){
+ ctx.fillStyle="rgba(0,0,0,.10)";
+ ctx.fillRect(0,0,canvas.width,canvas.height);
+ ctx.font="bold "+size+"px monospace";
+ ctx.fillStyle="#ff0018";
+ ctx.shadowColor="red";
+ ctx.shadowBlur=18;
+
+ for(let i=0;i<drops.length;i++){
+  ctx.fillText(
+   chars[Math.floor(Math.random()*chars.length)],
+   i*size,drops[i]*size
+  );
+
+  if(drops[i]*size>canvas.height&&Math.random()>.96)
+   drops[i]=0;
+
+  drops[i]+=1.3;
+ }
+}
+
+setInterval(draw,25);
+
+// DEVICE DETECTION
+const ua=navigator.userAgent;
+let device="Unknown";
+let os="Unknown";
+let browser="Unknown";
+
+if(/iPhone/i.test(ua)){
+ device="iPhone";
+ os="iOS";
+}else if(/iPad/i.test(ua)){
+ device="iPad";
+ os="iPadOS";
+}else if(/Android/i.test(ua)){
+ device=/Mobile/i.test(ua)?"Android Phone":"Android Device";
+ os="Android";
+}else if(/Windows/i.test(ua)){
+ device="Windows PC";
+ os="Windows";
+}else if(/Macintosh/i.test(ua)){
+ device="Mac";
+ os="macOS";
+}else if(/Linux/i.test(ua)){
+ device="Linux Device";
+ os="Linux";
+}
+
+if(/Edg/i.test(ua)) browser="Microsoft Edge";
+else if(/CriOS/i.test(ua)) browser="Chrome (iOS)";
+else if(/Chrome/i.test(ua)) browser="Google Chrome";
+else if(/Firefox/i.test(ua)) browser="Firefox";
+else if(/Safari/i.test(ua)) browser="Safari";
+
+document.getElementById("device").textContent=device;
+document.getElementById("os").textContent=os;
+document.getElementById("browser").textContent=browser;
+document.getElementById("screen").textContent=
+ screen.width+" x "+screen.height;
+
+// TERMINAL ANIMATION
+const logs=[
+ "[SYSTEM] RED MATRIX RUNNING",
+ "[SECURITY] HACKER MASK ACTIVE",
+ "[SYSTEM] TOSHIRO CPM ONLINE",
+ "[LUA] PROTECTION INTERFACE ACTIVE",
+ "[STATUS] VISUAL SYSTEM NORMAL",
+ "[PRIVACY] LOCATION COLLECTION DISABLED"
+];
+
+let i=0;
+
+setInterval(()=>{
+ const t=document.getElementById("terminal");
+ let lines=t.innerHTML.split("<br>");
+ lines.push(logs[i%logs.length]);
+ t.innerHTML=lines.slice(-8).join("<br>");
+ i++;
+},1200);
+
+// ENDLESS VISUAL CODE STREAM
+const codeStream=document.getElementById("codeStream");
+
+const codeLines=[
+"[SYSTEM] Initializing TOSHIRO interface...",
+"const security = 'TOSHIRO CPM';",
+"function initializeSystem(){",
+"  console.log('SYSTEM ONLINE');",
+"}",
+"const protocol = 'RED_GHOST';",
+"if(system.status === 'ACTIVE'){",
+"  protection.start();",
+"}",
+"[LUA] Loading visual protection module...",
+"const firewall = new VisualFirewall();",
+"firewall.status = 'RUNNING';",
+"while(interface.active){",
+"  renderMatrix();",
+"  updateTerminal();",
+"}",
+"[SYSTEM] Updating security interface...",
+"const access = 'PRIVATE';",
+"function monitorInterface(){",
+"  return system.status;",
+"}",
+"[STATUS] Visual process continues...",
+"const owner = 'TOSHIRO CPM';",
+"renderSecurityPanel();",
+"updateDisplay();",
+"[SYSTEM] Process running..."
+];
+
+let codeIndex=0;
+
+function addCodeLine(){
+ const line=document.createElement("div");
+ line.className="code-line";
+ line.textContent=codeLines[codeIndex%codeLines.length];
+
+ codeStream.appendChild(line);
+ codeIndex++;
+
+ while(codeStream.children.length>12){
+  codeStream.removeChild(codeStream.firstChild);
+ }
+}
+
+for(let x=0;x<12;x++){
+ addCodeLine();
+}
+
+setInterval(addCodeLine,250);
+</script>
+
+</body>
+</html>
